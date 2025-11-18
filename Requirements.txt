@@ -1,1 +1,13 @@
 Updated Requirements.txt!!'}}]}  ; II notice updating wouldnt deliver` -> entire node shifted worse except returnSIGNAL== Equity
+ccxt==4.2.85
+pandas
+pandas-ta
+numpy
+torch
+stable-baselines3
+pyyaml
+python-dotenv
+streamlit
+sqlite3
+requests
+scikit-learn
