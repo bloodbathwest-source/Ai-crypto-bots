@@ -36,7 +36,7 @@ BYBIT_API_KEY=
 BYBIT_API_SECRET=
 TELEGRAM_TOKEN=
 TELEGRAM_CHAT_ID=
-LUNARCRUSH_API_KEY= # optional, free at lunarcrush.com
+LUNARCRUSH_API_KEY=
 
 .gitignore
 .env
@@ -46,19 +46,19 @@ models/
 db.sqlite3
 
 config.yaml
-exchange: binance          # binance, bybit, okx, kucoin, gate, coinbase
+exchange: binance
 symbols:
   - BTC/USDT
   - ETH/USDT
   - SOL/USDT
-risk_level: medium         # low, medium, high
-trade_type: spot           # spot or futures
+risk_level: medium
+trade_type: spot
 leverage: 5
-strategy: ensemble         # rule, transformer, rl, ensemble
+strategy: ensemble
 use_grid: false
 use_martingale: false
-fear_greed_weight: 0.15    # how much sentiment affects final signal
-retrain_models: true       # auto retrain every Sunday
+fear_greed_weight: 0.15
+retrain_models: true
 testnet: true
 
 Dockerfile
@@ -125,7 +125,7 @@ def get_fear_greed():
     try:
         r = requests.get('https://api.alternative.me/fng/?limit=1')
         value = int(r.json()['data'][0]['value'])
-        return (value - 50) / 50.0  # -1.0 (extreme fear) to +1.0 (extreme greed)
+        return (value - 50) / 50.0
     except:
         return 0.0
 
@@ -136,8 +136,8 @@ def get_lunarcrush_sentiment(symbol):
     try:
         base = symbol.split('/')[0].lower()
         r = requests.get(f'https://api.lunarcrush.com/v2?data=assets&key={api_key}&symbol={base}')
-        sentiment = r.json()['data'][0]['social_score'] / 1000000.0  # normalized
-        return (sentiment - 0.5) * 2  # -1 to +1
+        sentiment = r.json()['data'][0]['social_score'] / 1000000.0
+        return (sentiment - 0.5) * 2
     except:
         return 0.0
         
@@ -176,19 +176,15 @@ import joblib
 from datetime import datetime
 
 class TransformerModel(nn.Module):
-    # same as before...
-    # (copy the TransformerModel class from previous version)
+    pass
 
 def train_transformer(df_close):
-    # training code from previous version
-    pass  # full code same as before
+    pass
 
 def train_rl(df):
-    # same as before
     pass
 
 def load_models():
-    # load or train transformer + PPO + scaler
     pass
     
     
@@ -212,8 +208,7 @@ def get_rule_signal(df):
     return 0.0
 
 def get_transformer_signal(model, scaler, recent_close):
-    # predict and return normalized signal -1 to +1
-    pass  # implement
+    pass
 
 def get_rl_signal(rl_model, obs):
     action, _ = rl_model.predict(obs, deterministic=True)
@@ -233,7 +228,7 @@ def get_ensemble_signal(symbol, dfs):
              trans_sig * weights['transformer'] +
              rl_sig * weights['rl'] +
              sentiment_score * weights['sentiment'])
-    return np.clip(final, -1, 1)  # -1 strong sell → +1 strong buy
+    return np.clip(final, -1, 1)
     
     
     
@@ -281,12 +276,12 @@ with open('config.yaml') as f:
 init_db()
 exchange = get_exchange(config, testnet=config.get('testnet', True))
 
-models = load_models()  # transformer, rl, scaler
+models = load_models()
 
 risk_map = {'low': 0.01, 'medium': 0.025, 'high': 0.05}
 risk_pct = risk_map[config['risk_level']]
 
-print("Ultimate AI Crypto Bot v7.0 started - 5x upgraded")
+print("AI Crypto Bot started")
 
 while True:
     try:
@@ -302,22 +297,20 @@ while True:
             price = df['close'].iloc[-1]
             qty = (balance * risk_pct) / price
 
-            if signal > 0.6:   # strong buy
+            if signal > 0.6:
                 order = exchange.create_market_buy_order(symbol, qty)
                 log_trade(symbol, 'buy', qty, price)
                 asyncio.run(send_telegram(f"🚀 BUY {symbol} @ {price:.2f} | Signal: {signal:.2f}"))
-            elif signal < -0.6:  # strong sell
+            elif signal < -0.6:
                 order = exchange.create_market_sell_order(symbol, qty)
-                pnl = qty * (price - entry_price)  # you need to track entry price per symbol
+                pnl = qty * (price - entry_price)
                 log_trade(symbol, 'sell', qty, price, pnl)
                 asyncio.run(send_telegram(f"💥 SELL {symbol} @ {price:.2f} | PnL: {pnl:.2f}"))
 
-        # Auto retrain every Sunday
         if datetime.utcnow().weekday() == 6 and datetime.utcnow().hour == 2:
             print("Weekly retraining...")
-            # retrain logic here
 
-        time.sleep(180)  # 3-minute cycle for multi-coin
+        time.sleep(180)
 
     except Exception as e:
         print(e)
