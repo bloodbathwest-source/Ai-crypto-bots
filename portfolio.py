@@ -6,7 +6,6 @@ class PortfolioManager:
     def __init__(self, symbols, db_path='positions.json'):
         self.db_path = db_path
         self.positions = self._load_positions()
-        # Ensure all symbols from config are in the positions dict
         for symbol in symbols:
             if symbol not in self.positions:
                 self.positions[symbol] = {'quantity': 0, 'avg_entry_price': 0}
@@ -26,7 +25,6 @@ class PortfolioManager:
         current_qty = self.positions[symbol]['quantity']
         current_avg_price = self.positions[symbol]['avg_entry_price']
 
-        # Update average entry price
         total_cost = (current_qty * current_avg_price) + (quantity * price)
         new_qty = current_qty + quantity
         self.positions[symbol]['avg_entry_price'] = total_cost / new_qty
@@ -41,10 +39,9 @@ class PortfolioManager:
             entry_price = self.positions[symbol]['avg_entry_price']
             pnl = (price - entry_price) * quantity
             
-            # Reduce quantity. You might want more complex logic for partial sells.
             self.positions[symbol]['quantity'] -= quantity
             if self.positions[symbol]['quantity'] <= 0:
-                 self.positions[symbol]['avg_entry_price'] = 0 # Reset avg price after closing position
+                self.positions[symbol]['avg_entry_price'] = 0
 
             log_trade(symbol, 'sell', quantity, price, pnl)
             self._save_positions()
