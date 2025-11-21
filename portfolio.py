@@ -41,7 +41,7 @@ class PortfolioManager:
             
             self.positions[symbol]['quantity'] -= quantity
             if self.positions[symbol]['quantity'] <= 0:
-                 self.positions[symbol]['avg_entry_price'] = 0
+                self.positions[symbol]['avg_entry_price'] = 0
 
             log_trade(symbol, 'sell', quantity, price, pnl)
             self._save_positions()
