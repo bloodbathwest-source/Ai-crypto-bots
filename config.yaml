@@ -1,0 +1,64 @@
+# config.yaml → 50 COINS (fixed & ready)
+exchange: binance
+trade_type: spot
+testnet: true
+
+risk_level: medium        # low | medium | high
+stop_loss_pct: 8
+take_profit_pct: 25
+trailing_stop_pct: 5      # 0 = off
+
+auto_rebalance: false
+fear_greed_weight: 0.15
+
+symbols:
+  - BTC/USDT
+  - ETH/USDT
+  - BNB/USDT
+  - SOL/USDT
+  - XRP/USDT
+  - ADA/USDT
+  - DOGE/USDT
+  - TRX/USDT
+  - AVAX/USDT
+  - SHIB/USDT
+  - LINK/USDT
+  - DOT/USDT
+  - LTC/USDT
+  - BCH/USDT
+  - NEAR/USDT
+  - MATIC/USDT
+  - UNI/USDT
+  - ICP/USDT
+  - APT/USDT
+  - HBAR/USDT
+  - VET/USDT
+  - FIL/USDT
+  - ETC/USDT
+  - STX/USDT
+  - ARB/USDT
+  - OP/USDT
+  - INJ/USDT
+  - FTM/USDT
+  - ALGO/USDT
+  - SAND/USDT
+  - MANA/USDT
+  - AXS/USDT
+  - GALA/USDT
+  - PEPE/USDT
+  - FLOKI/USDT
+  - BONK/USDT
+  - WIF/USDT
+  - TON/USDT
+  - NOT/USDT
+  - ONDO/USDT
+  - FET/USDT
+  - RNDR/USDT
+  - GRT/USDT
+  - AAVE/USDT
+  - MKR/USDT
+  - RUNE/USDT
+  - BRETT/USDT
+  - CRO/USDT
+  - KAS/USDT
+  - SEI/USDT
