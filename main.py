@@ -1,19 +1,35 @@
 
+import streamlit as st
+
+st.set_page_config(page_title="Crypto AI Bot", layout="wide")
+
+st.title("Crypto AI Trading Bot Dashboard")
+st.sidebar.success("Bot is running!")
+
+st.write("""
+Welcome to your AI-powered crypto trading bot dashboard.
+Select a page from the sidebar to continue.
+""")
+
+st.info("If you're seeing this, your app is fixed and running perfectly!")
+
+
 File structure
 crypto-ai-bot/
-├── main.py
-├── config.yaml
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
-├── .env.example
-├── .gitignore
-├── dashboard.py
-├── exchange.py
-├── strategies.py
-├── models.py
-├── utils.py
-└── database.
+main.py
+config.yaml
+requirements.txt
+Dockerfile
+docker-compose.yml
+.env.example
+.gitignore
+dashboard.pay
+exchange.py
+strategies.py
+models.py
+utils.py
+database.
+
 
 requirements.txt
 ccxt==4.2.85
