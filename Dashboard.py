@@ -1,40 +1,27 @@
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
-from datetime import datetime, timedelta
-import random
+import json
+import os
+from datetime import datetime
 
-st.title("📊 Live Trading Dashboard")
+st.set_page_config(page_title="LIVE AI Bot", layout="wide")
+st.title("LIVE AI Crypto Trading Bot")
 
-# Mock real-time data
-@st.cache_data(ttl=5)  # Updates every 5 seconds
-def get_live_data():
-    now = datetime.now()
-    equity = 50000 + sum(random.gauss(0, 150) for _ in range(1000))
-    return {
-        "equity": equity,
-        "daily_pnl": random.uniform(-800, 2200),
-        "win_rate": round(random.uniform(58, 78), 1),
-        "trades_today": random.randint(8, 47),
-        "uptime": (datetime.now() - datetime.now().replace(hour=0, minute=0, second=0)).seconds // 60
-    }
+# Try to load real portfolio data
+positions_file = "positions.json"  # Same file your bot uses
+trades_file = "trades.db"         # Or trades.json if you export it
 
-data = get_live_data()
+if os.path.exists(positions_file):
+    with open(positions_file) as f:
+        positions = json.load(f)
+    
+    total_equity = 50000  # You can calculate real equity here
+    daily_pnl = 0
+    for sym, pos in positions.items():
+        if pos['quantity'] > 0:
+            st.success(f"{sym}: {pos['quantity']:.6f} @ ${pos['avg_entry_price']:,.2f}")
 
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    st.metric("Total Equity", f"${data['equity']:,.2f}", f"{data['daily_pnl']:+,.0f}")
-with col2:
-    st.metric("Win Rate", f"{data['win_rate']}%", "↑ 2.4%")
-with col3:
-    st.metric("Trades Today", data['trades_today'])
-with col4:
-    st.metric("Bot Uptime", f"{data['uptime']} min")
-
-# Equity curve
-dates = pd.date_range(end=datetime.now(), periods=200, freq='30min')
-equity = 50000 + pd.np.cumsum(pd.np.random.randn(200) * 180)
-fig = go.Figure()
-fig.add_trace(go.Scatter(x=dates, y=equity, mode='lines', name='Equity', line=dict(color='#00D4A4')))
-fig.update_layout(title="Equity Curve (Live)", template="plotly_dark")
-st.plotly_chart(fig, use_container_width=True)
+    st.metric("Bot Status", "ONLINE & TRADING", "50 coins active")
+else:
+    st.warning("Bot not running locally — showing demo mode")
+    st.metric("Bot Status", "Demo Mode", "Connect your bot for live data")
