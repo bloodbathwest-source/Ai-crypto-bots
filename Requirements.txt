@@ -1,12 +1,5 @@
-ccxt==4.2.85
+streamlit
 pandas
-pandas-ta
-numpy
-torch
-stable-baselines3
+plotly
 pyyaml
 python-dotenv
-streamlit
-sqlite3
-requests
-scikit-learn
